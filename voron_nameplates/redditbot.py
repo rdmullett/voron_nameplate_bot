@@ -81,7 +81,4 @@ if __name__ == '__main__':
     main()
 
 #TODO:
-#upload resulting files to google drive
-
-#TODO:
 #comment on post with resulting google drive link
