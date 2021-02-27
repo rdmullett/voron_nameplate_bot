@@ -62,7 +62,7 @@ def serial_folder_create(service, serials):
                 'mimeType': 'application/vnd.google-apps.folder',
                 'parents': [nameplatesID]
                 }
-            file = service.files().create(body=file_metadata, fields='id, webViewLink').execute()
+            uploadFile = service.files().create(body=file_metadata, fields='id, webViewLink').execute()
         else:
             continue
 
