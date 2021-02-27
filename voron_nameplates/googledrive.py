@@ -36,6 +36,7 @@ def service():
     service = build('drive', 'v3', credentials=creds)
     return(service)
 
+#create folder for every serial underneath nameplates
 def serial_folder_create(service, serials):
     page_token = None
     nameplatesResponse = service.files().list(q="name='nameplates' and mimeType='application/vnd.google-apps.folder'",
@@ -55,13 +56,10 @@ def serial_folder_create(service, serials):
         except:
             response_check = False
 
-        print(response_check)
         if not response_check:
             file_metadata = {
                 'name': serial,
                 'mimeType': 'application/vnd.google-apps.folder',
-                'permissions': {'displayName': 'anyone', 'role': 'reader'},
-                'role': 'reader',
                 'parents': [nameplatesID]
                 }
             file = service.files().create(body=file_metadata, fields='id, webViewLink').execute()
@@ -70,6 +68,7 @@ def serial_folder_create(service, serials):
 
 #    print('Folder ID: %s' % file.get('id'))
 
+#upload every .stl file into the proper folder and return a dictionary with every serial, and the link
 def serial_stl_upload(service, serials):
     shareLinks = {}
     for serial in serials:
@@ -80,7 +79,6 @@ def serial_stl_upload(service, serials):
         folderURL = response["files"][0]['webViewLink']
         print(folderURL)
 
-        #TODO:changes parents to grab ID instead of serial https://developers.google.com/drive/api/v3/folder#python_1
         noLogo = {'name': serial + "-NoLogo.stl",
                 'parents': [folderID]
                 }

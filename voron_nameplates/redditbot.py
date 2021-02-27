@@ -38,6 +38,7 @@ def serial_grab_reddit():
             posts_replied_to = posts_replied_to.split("\n")
             posts_replied_to = list(filter(None, posts_replied_to))
     serials = []
+    redditURLS = {}
     for comment in registryuser.comments.new(limit=5):
         if comment.submission.id not in posts_replied_to:
             posts_replied_to.append(comment.submission.id)
@@ -49,12 +50,14 @@ def serial_grab_reddit():
             print("SerialNumber: ", serialNumber)
             print("--------------------------\n")
             serials.append(serialNumber)
+            #TODO: fix youtube links for reddit submissions.....skip top level comment??
+            redditURLS[serialNumber] = [comment.submission.url]
         else:
             continue
     with open("/nameplates/logs/post_logs.txt", "w") as f:
         for post_id in posts_replied_to:
             f.write(post_id + "\n")
-    return serials
+    return serials, redditURLS
 
 def scad_create(serialList):
     for serial in serialList:
@@ -66,11 +69,13 @@ def scad_create(serialList):
             continue
 
 def main():
-    serials = serial_grab_reddit()
+    serials, redditURLS = serial_grab_reddit()
     scad_create(serials)
     service = googledrive.service()
     googledrive.serial_folder_create(service, serials)
-    googledrive.serial_stl_upload(service, serials)
+    links = googledrive.serial_stl_upload(service, serials)
+    print(links)
+    print(redditURLS)
 
 if __name__ == '__main__':
     main()
