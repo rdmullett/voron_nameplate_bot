@@ -77,7 +77,6 @@ def serial_stl_upload(service, serials):
                                     fields='files(id, webViewLink)').execute()
         folderID = response["files"][0]['id']
         folderURL = response["files"][0]['webViewLink']
-        print(folderURL)
 
         noLogo = {'name': serial + "-NoLogo.stl",
                 'parents': [folderID]
