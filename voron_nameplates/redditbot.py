@@ -4,6 +4,7 @@ import praw
 import os
 import re
 import sys
+import time
 #from voron_nameplates import googledrive
 import googledrive
 import subprocess
@@ -19,13 +20,6 @@ workingDir = os.getcwd()
 sys.path.append(workingDir)
 
 reddit = praw.Reddit(client_id=clientID, client_secret=clientSecret, password=clientPass, user_agent=clientAgent, username=clientUser)
-
-#subreddit = reddit.subreddit("voroncorexy")
-
-#for submission in subreddit.new(limit=5):
-#    print("Title: ", submission.title)
-#    print("Score: ", submission.score)
-#    print("--------------------------\n")
 
 registryuser = reddit.redditor("voron_registry_bot")
 
@@ -63,8 +57,7 @@ def scad_create(serialList):
     for serial in serialList:
         #For some reason calling the openscad directly from python makes openscad very unhappy. Calling from bash script for now
         if not os.path.isfile("/nameplates/" + serial + ".stl"):
-            #TODO: resolve absolute path issue
-            subprocess.run(["/home/username/voron_nameplate_bot/voron_nameplates/scadcall.sh", serial])
+            subprocess.run(["scadcall.sh", serial])
         else:
             continue
 
@@ -72,7 +65,11 @@ def comment_create(googDict, redDict):
     for key, value in googDict.items():
         reddit_post = redDict[key][0]
         googleURL = googDict[key][0]
-        print("Congratulations on your serial! I generated a nameplate for your build that you can download here:\n" + googleURL)
+        comment = "Congratulations on your serial! I generated a nameplate for your build that you can download here:\n" + googleURL + "\nIf there are issues with this bot please contact /u/iDuumb."
+        print(comment)
+        submission = reddit.submission(url="https://www.reddit.com/comments/" + reddit_post)
+        submission.reply(comment)
+        time.sleep(610)
 
 def main():
     serials, redditURLS = serial_grab_reddit()

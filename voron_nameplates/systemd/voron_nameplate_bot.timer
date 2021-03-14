@@ -1,0 +1,12 @@
+[Unit]
+Description=Run reddit bot every 1 minute
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=5min
+Persistent=true
+Unit=voron_nameplate_bot.service
+
+[Install]
+WantedBy=timers.target
+
