@@ -33,7 +33,7 @@ def serial_grab_reddit():
             posts_replied_to = list(filter(None, posts_replied_to))
     serials = []
     redditURLS = {}
-    for comment in registryuser.comments.new(limit=1):
+    for comment in registryuser.comments.new(limit=50):
         if comment.submission.id not in posts_replied_to:
             posts_replied_to.append(comment.submission.id)
             print("URL: ", comment.submission.url)
@@ -65,7 +65,7 @@ def comment_create(googDict, redDict):
     for key, value in googDict.items():
         reddit_post = redDict[key][0]
         googleURL = googDict[key][0]
-        comment = "Congratulations on your serial! I generated a nameplate for your build that you can download here:\n" + googleURL + "\nIf there are issues with this bot please contact /u/iDuumb."
+        comment = "Congratulations on your serial! I generated a nameplate for your build that you can download here:\n\n" + googleURL + "\n\nIf there are issues with this bot please contact /u/iDuumb."
         print(comment)
         submission = reddit.submission(url="https://www.reddit.com/comments/" + reddit_post)
         submission.reply(comment)
@@ -81,6 +81,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-#TODO:
-#comment on post with resulting google drive link
