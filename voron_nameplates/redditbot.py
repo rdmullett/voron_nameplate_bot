@@ -33,7 +33,7 @@ def serial_grab_reddit():
             posts_replied_to = list(filter(None, posts_replied_to))
     serials = []
     redditURLS = {}
-    for comment in registryuser.comments.new(limit=50):
+    for comment in registryuser.comments.new(limit=100):
         if comment.submission.id not in posts_replied_to:
             posts_replied_to.append(comment.submission.id)
             print("URL: ", comment.submission.url)
