@@ -25,17 +25,18 @@ registryuser = reddit.redditor("voron_registry_bot")
 
 def serial_grab_reddit():
     if not os.path.isfile("/nameplates/logs/post_logs.txt"):
-        posts_replied_to=[]
+        postsRepliedTo=[]
     else:
         with open("/nameplates/logs/post_logs.txt", "r") as f:
-            posts_replied_to = f.read()
-            posts_replied_to = posts_replied_to.split("\n")
-            posts_replied_to = list(filter(None, posts_replied_to))
+            postsRepliedTo = f.read()
+            postsRepliedTo = postsRepliedTo.split("\n")
+            postsRepliedTo = list(filter(None, postsRepliedTo))
+            f.close()
     serials = []
     redditURLS = {}
     for comment in registryuser.comments.new(limit=100):
-        if comment.submission.id not in posts_replied_to:
-            posts_replied_to.append(comment.submission.id)
+        if comment.submission.id not in postsRepliedTo:
+            postsRepliedTo.append(comment.submission.id)
             print("URL: ", comment.submission.url)
             print("ID: ", comment.id)
             commentText = comment.body
@@ -48,9 +49,6 @@ def serial_grab_reddit():
             redditURLS[serialNumber] = [comment.submission.id]
         else:
             continue
-    with open("/nameplates/logs/post_logs.txt", "w") as f:
-        for post_id in posts_replied_to:
-            f.write(post_id + "\n")
     return serials, redditURLS
 
 def scad_create(serialList):
@@ -65,8 +63,12 @@ def comment_create(googDict, redDict):
     for key, value in googDict.items():
         reddit_post = redDict[key][0]
         googleURL = googDict[key][0]
+#TODO: remove the following comments when ready to post again
         comment = "Congratulations on your serial! I generated a nameplate for your build that you can download here:\n\n" + googleURL + "\n\nIf there are issues with this bot please contact /u/iDuumb."
         print(comment)
+        with open("/nameplates/logs/post_logs.txt", "a") as f:
+            f.write(reddit_post + "\n")
+            f.close()
         submission = reddit.submission(url="https://www.reddit.com/comments/" + reddit_post)
         submission.reply(comment)
         time.sleep(610)
