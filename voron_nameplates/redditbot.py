@@ -89,6 +89,7 @@ def production_run():
     runpath = "/nameplates/"
     serials, redditURLS = serial_grab_reddit(runpath)
     scad_create(serials, runpath)
+    service = googledrive.service()
     googledrive.serial_folder_create(service, serials)
     googURLS = googledrive.serial_stl_upload(service, serials)
     comment_create(googURLS, redditURLS)
