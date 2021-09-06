@@ -9,6 +9,7 @@
 #VORON_NAMEPLATE_USER
 
 mkdir -p /nameplates/logs
+mkdir -p /dry-run/logs
 cd /
 git clone https://github.com/rdmullett/voron_serial_plate/
 yum -y install git python3-pip openscad

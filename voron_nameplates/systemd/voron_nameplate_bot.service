@@ -4,7 +4,7 @@ Description=Voron nameplates reddit bot service
 [Service]
 WorkingDirectory=/root/voron_nameplate_bot/voron_nameplates
 EnvironmentFile=/etc/environment
-ExecStart=/root/voron_nameplate_bot/voron_nameplates/redditbot.py
+ExecStart=/root/voron_nameplate_bot/voron_nameplates/redditbot.py --prod
 
 [Install]
 WantedBy=multi-user.target

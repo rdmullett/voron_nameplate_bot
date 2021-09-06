@@ -26,7 +26,8 @@ registryuser = reddit.redditor("voron_registry_bot")
 
 def parse_args():
     parser = argparse.ArgumentParser("This is a reddit bot that generates a nameplate for every new Voron serial number on /r/voroncorexy and provide it via a comment.")
-    parser.add_argument("-d", "--dry-run", help='Dry run to test functionality and avoid uploading to Google or making a comment on Reddit.')
+    parser.add_argument("-d", "--dry", help='Dry run to test functionality and avoid uploading to Google or making a comment on Reddit.', action='store_true')
+    parser.add_argument("-p", "--prod", help='Dry run to test functionality and avoid uploading to Google or making a comment on Reddit.', action='store_true')
     args = parser.parse_args()
     return args
 
@@ -41,7 +42,7 @@ def serial_grab_reddit(runpath):
             f.close()
     serials = []
     redditURLS = {}
-    for comment in registryuser.comments.new(limit=100):
+    for comment in registryuser.comments.new(limit=150):
         if comment.submission.id not in postsRepliedTo:
             postsRepliedTo.append(comment.submission.id)
             print("URL: ", comment.submission.url)
@@ -94,10 +95,12 @@ def production_run():
 
 def main():
     options = parse_args()
-    if options.dry-run():
-       dry_run()
-    else:
+    if options.dry:
+        dry_run()
+    elif options.prod:
         production_run()
+    else:
+        exit()
 
 if __name__ == '__main__':
     main()
